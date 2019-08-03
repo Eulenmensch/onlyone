@@ -25,12 +25,12 @@ public class PlatformController : MonoBehaviour
     void Update()
     {
         MovementInputKeyboard();
+        StretchSquash();
     }
 
     void MovementInputKeyboard()
     {
         var xInput = Input.GetAxisRaw("Horizontal");
-        var yInput = Input.GetAxisRaw("Vertical");
         if (xInput != 0)
         {
             var xVel = xInput * Speed * Time.deltaTime;
@@ -40,6 +40,11 @@ public class PlatformController : MonoBehaviour
         {
             Rigidbody.velocity = new Vector2(0, Rigidbody.velocity.y);
         }
+    }
+
+    void StretchSquash()
+    {
+        var yInput = Input.GetAxisRaw("Vertical");
         if (yInput != 0)
         {
             if (yInput <= 0)

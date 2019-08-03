@@ -8,11 +8,13 @@ public class CharacterBehaviour : MonoBehaviour
     public float FlingHeight;
     public float FlingForce;
     public float Threshold;
+    public float DoubleJumpForce;
     public GameObject Platform;
 
     private PlatformController PlatCont;
     private Rigidbody2D Rigidbody;
     private bool Airborne;
+    private bool DoubleJumped;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +27,7 @@ public class CharacterBehaviour : MonoBehaviour
     void Update()
     {
         Fling();
+        DoubleJump();
         //SpringSwitch();
     }
 
@@ -42,22 +45,12 @@ public class CharacterBehaviour : MonoBehaviour
         }
     }
 
-    void SpringSwitch()
+    void DoubleJump()
     {
-        if (GetGroundedOnPlatform() && Airborne)
+        if (Input.GetButtonDown("Jump") && Airborne & !DoubleJumped)
         {
-            print("switch");
-            GetComponent<SpringJoint2D>().enabled = true;
-            Airborne = false;
-        }
-    }
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        if (other.gameObject == Platform)
-        {
-            print("collided");
-            GetComponent<SpringJoint2D>().enabled = true;
-            Airborne = false;
+            Rigidbody.AddForce(Vector2.up * DoubleJumpForce, ForceMode2D.Impulse);
+            DoubleJumped = true;
         }
     }
 
@@ -71,6 +64,17 @@ public class CharacterBehaviour : MonoBehaviour
         else
         {
             return false;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject == Platform)
+        {
+            print("collided");
+            GetComponent<SpringJoint2D>().enabled = true;
+            Airborne = false;
+            DoubleJumped = false;
         }
     }
 }
