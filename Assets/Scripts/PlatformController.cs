@@ -27,7 +27,8 @@ public class PlatformController : MonoBehaviour
     void Update()
     {
         MovementInputKeyboard();
-        StretchSquash();
+        //StretchSquash();
+        FlipSprite();
     }
 
     void MovementInputKeyboard()
@@ -42,8 +43,20 @@ public class PlatformController : MonoBehaviour
         else
         {
             Rigidbody.velocity = new Vector2(0, Rigidbody.velocity.y);
-            print("what what");
             PlatAnimator.SetBool("Walking", false);
+        }
+    }
+
+    void FlipSprite()
+    {
+        var xInput = Input.GetAxisRaw("Horizontal");
+        if (xInput < 0)
+        {
+            transform.localScale = new Vector2(-1, 1);
+        }
+        if (xInput > 0)
+        {
+            transform.localScale = new Vector2(1, 1);
         }
     }
 

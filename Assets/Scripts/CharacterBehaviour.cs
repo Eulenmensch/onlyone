@@ -19,14 +19,14 @@ public class CharacterBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PlatCont = Platform.GetComponent<PlatformController>();
+        //PlatCont = Platform.GetComponent<PlatformController>();
         Rigidbody = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Fling();
+        //Fling();
         DoubleJump();
         //SpringSwitch();
     }
