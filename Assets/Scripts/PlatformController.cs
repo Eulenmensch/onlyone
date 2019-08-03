@@ -13,11 +13,13 @@ public class PlatformController : MonoBehaviour
 
     Rigidbody2D Rigidbody;
     Vector3 StartScale;
+    Animator PlatAnimator;
 
     // Start is called before the first frame update
     void Start()
     {
         Rigidbody = GetComponent<Rigidbody2D>();
+        PlatAnimator = GetComponent<Animator>();
         StartScale = transform.localScale;
     }
 
@@ -35,10 +37,13 @@ public class PlatformController : MonoBehaviour
         {
             var xVel = xInput * Speed * Time.deltaTime;
             Rigidbody.velocity = new Vector2(xVel, Rigidbody.velocity.y);
+            PlatAnimator.SetBool("Walking", true);
         }
         else
         {
             Rigidbody.velocity = new Vector2(0, Rigidbody.velocity.y);
+            print("what what");
+            PlatAnimator.SetBool("Walking", false);
         }
     }
 
