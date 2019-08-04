@@ -21,7 +21,7 @@ public class PlatformTopController : MonoBehaviour
     {
         Line = GetComponent<LineRenderer>();
         BoxCollider = GetComponent<BoxCollider2D>();
-        DefaultYPos = transform.position.y;
+        DefaultYPos = transform.localPosition.y;
     }
 
     // Update is called once per frame
@@ -54,16 +54,16 @@ public class PlatformTopController : MonoBehaviour
         {
             if (DeformInput <= 0)
             {
-                transform.DOMoveY(SquashDepth, SquashTime);
+                transform.DOLocalMoveY(SquashDepth, SquashTime);
             }
             if (DeformInput >= 0)
             {
-                transform.DOMoveY(StretchHeight, StretchTime);
+                transform.DOLocalMoveY(StretchHeight, StretchTime);
             }
         }
         else
         {
-            transform.DOMoveY(DefaultYPos, SquashTime);
+            transform.DOLocalMoveY(DefaultYPos, SquashTime);
         }
     }
 

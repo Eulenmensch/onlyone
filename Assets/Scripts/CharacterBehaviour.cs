@@ -8,13 +8,12 @@ public class CharacterBehaviour : MonoBehaviour
     public float FlingHeight;
     public float FlingForce;
     public float Threshold;
-    public float DoubleJumpForce;
+    public bool Airborne;
+    public bool DoubleJumped;
     public GameObject Platform;
 
     private PlatformTopController PlatTopCont;
     private Rigidbody2D Rigidbody;
-    private bool Airborne;
-    private bool DoubleJumped;
 
     // Start is called before the first frame update
     void Start()
@@ -27,8 +26,6 @@ public class CharacterBehaviour : MonoBehaviour
     void Update()
     {
         Fling();
-        DoubleJump();
-        //SpringSwitch();
     }
 
     void Fling()
@@ -42,15 +39,6 @@ public class CharacterBehaviour : MonoBehaviour
             var xInput = Input.GetAxis("Horizontal");
             var flingDir = new Vector2(xInput, FlingHeight);
             Rigidbody.AddForce(flingDir * FlingForce);
-        }
-    }
-
-    void DoubleJump()
-    {
-        if (Input.GetButtonDown("Jump") && Airborne & !DoubleJumped)
-        {
-            Rigidbody.AddForce(Vector2.up * DoubleJumpForce, ForceMode2D.Impulse);
-            DoubleJumped = true;
         }
     }
 
