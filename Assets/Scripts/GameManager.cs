@@ -77,4 +77,8 @@ public class GameManager : Singleton<GameManager>
     //     yield return new WaitForSeconds(0.666f);
     //     SceneManager.LoadScene(_index);
     // }
+    public void Quit()
+    {
+        Application.Quit();
+    }
 }
