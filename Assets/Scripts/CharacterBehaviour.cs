@@ -14,37 +14,67 @@ public class CharacterBehaviour : MonoBehaviour
 
     private PlatformTopController PlatTopCont;
     private Rigidbody2D Rigidbody;
+    private float Timer;
+    public float FlingTimer;
+    public bool TimerStarted;
 
 
     public float DoubleJumpForce;
     public float Speed;
     private Animator CharAnimator;
     private CharacterBehaviour CharBehaviour;
+    private SpringJoint2D Spring;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        Platform = GameObject.FindGameObjectWithTag("TopPlatform");
         PlatTopCont = Platform.GetComponent<PlatformTopController>();
         CharAnimator = GetComponent<Animator>();
         Rigidbody = GetComponent<Rigidbody2D>();
+        Spring = GetComponent<SpringJoint2D>();
+        Spring.connectedBody = Platform.GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Fling();
+        FlingInput();
         Move();
         DoubleJump();
         FlipSprite();
+        GetGroundedOnPlatform();
+    }
+
+    void FlingInput()
+    {
+        if (Input.GetAxisRaw("Vertical") != 0 && !TimerStarted)
+        {
+            TimerStarted = true;
+        }
+        if (TimerStarted)
+        {
+            Timer += Time.deltaTime;
+        }
+        if (Input.GetAxisRaw("Vertical") == 0 && Timer <= FlingTimer && TimerStarted)
+        {
+            Fling();
+            Timer = 0;
+            TimerStarted = false;
+        }
+        else if (Input.GetAxisRaw("Vertical") == 0 && Timer > FlingTimer)
+        {
+            Timer = 0;
+            TimerStarted = false;
+        }
     }
 
     void Fling()
     {
         var isGrounded = GetGroundedOnPlatform();
-        if (PlatTopCont.StretchHeight - Platform.transform.localPosition.y <= Threshold && isGrounded)
+        if (isGrounded)
         {
-            print("fling!");
             Airborne = true;
             CharAnimator.SetBool("Airborne", true);
             GetComponent<SpringJoint2D>().enabled = false;
@@ -63,6 +93,7 @@ public class CharacterBehaviour : MonoBehaviour
         }
         else
         {
+            Spring.enabled = false;
             return false;
         }
     }
@@ -73,7 +104,6 @@ public class CharacterBehaviour : MonoBehaviour
         contact = other.GetContact(0);
         if (contact.normal == Vector2.up)
         {
-            print("collided");
             Airborne = false;
             CharAnimator.SetBool("Airborne", false);
             DoubleJumped = false;
@@ -92,12 +122,14 @@ public class CharacterBehaviour : MonoBehaviour
             var xVel = xInput * Speed * Time.deltaTime;
             Rigidbody.velocity = new Vector2(xVel, Rigidbody.velocity.y);
             CharAnimator.SetBool("Walking", true);
+            Spring.enabled = false;
         }
-        // else if (!Airborne)
-        // {
-        //     Rigidbody.velocity = new Vector2(0, Rigidbody.velocity.y);
-        //     CharAnimator.SetBool("Walking", false);
-        // }
+        else if (!Airborne)
+        {
+            Rigidbody.velocity = new Vector2(0, Rigidbody.velocity.y);
+            CharAnimator.SetBool("Walking", false);
+            Spring.enabled = true;
+        }
         else
         {
             CharAnimator.SetBool("Walking", false);
