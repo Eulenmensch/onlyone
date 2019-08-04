@@ -15,19 +15,23 @@ public class GameManager : Singleton<GameManager>
     }
 
     public int[] Levels;
+    public float RestartTimer;
 
-    private int LevelIndex;
+    public int LevelIndex;
 
     public GameStates GameState;
 
-    Animator PanelAnim;
+    private float Timer;
+
+    // Animator PanelAnim;
 
     // Start is called before the first frame update
     void Start()
     {
+        Timer = 0;
         GameState = GameStates.startScreen;
         Levels = new int[SceneManager.sceneCountInBuildSettings];
-        PanelAnim = GameObject.FindGameObjectWithTag("Panel").GetComponent<Animator>();
+        // PanelAnim = GameObject.FindGameObjectWithTag("Panel").GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -38,25 +42,39 @@ public class GameManager : Singleton<GameManager>
 
     public void LoadNextScene()
     {
+        var levelIndex = SceneManager.GetActiveScene().buildIndex;
         LevelIndex++;
-        if (LevelIndex < Levels.Length && GameState != GameStates.endScreen)
+        levelIndex++;
+        if (levelIndex < Levels.Length && GameState != GameStates.endScreen)
         {
-            StartCoroutine(LoadAsyncScene(LevelIndex));
+            StartCoroutine(LoadAsyncScene(levelIndex, false));
         }
     }
     public void ReloadScene()
     {
-        StartCoroutine(LoadAsyncScene(LevelIndex));
+        var levelIndex = SceneManager.GetActiveScene().buildIndex;
+        StartCoroutine(LoadAsyncScene(levelIndex, true));
     }
 
-    IEnumerator LoadAsyncScene(int _index)
+    IEnumerator LoadAsyncScene(int _index, bool restart)
     {
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(_index);
 
+        if (restart)
+        {
+            yield return new WaitForSeconds(RestartTimer);
+        }
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(_index);
         // Wait until the asynchronous scene fully loads
         while (!asyncLoad.isDone)
         {
             yield return null;
         }
     }
+
+    // IEnumerator LoadSceneAfterAnim(int _index)
+    // {
+    //     PanelAnim.SetTrigger("SlideToRight");
+    //     yield return new WaitForSeconds(0.666f);
+    //     SceneManager.LoadScene(_index);
+    // }
 }

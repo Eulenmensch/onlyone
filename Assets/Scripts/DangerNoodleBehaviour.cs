@@ -25,6 +25,7 @@ public class DangerNoodleBehaviour : MonoBehaviour
             Instantiate(ParticleEffect, other.gameObject.transform.position, Quaternion.identity);
             Camera.main.GetComponent<Animator>().SetTrigger("Shake");
             GameManager.Instance.GameState = GameManager.GameStates.died;
+            GameManager.Instance.ReloadScene();
         }
     }
 }

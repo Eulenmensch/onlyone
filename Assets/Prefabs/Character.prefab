@@ -130,8 +130,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RayDistance: 1
-  FlingHeight: 1
-  FlingForce: 100
+  FlingHeight: 2
+  FlingForce: 120
   Threshold: 0.1
   Platform: {fileID: 0}
   FlingTimer: 0.3

@@ -44,4 +44,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Levels: 
+  RestartTimer: 2
   GameState: 0
