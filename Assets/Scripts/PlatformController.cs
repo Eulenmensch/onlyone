@@ -47,6 +47,11 @@ public class PlatformController : MonoBehaviour
         }
     }
 
+    void Jump()
+    {
+
+    }
+
     void FlipSprite()
     {
         var xInput = Input.GetAxisRaw("Horizontal");

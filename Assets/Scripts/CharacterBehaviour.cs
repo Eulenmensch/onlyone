@@ -11,7 +11,7 @@ public class CharacterBehaviour : MonoBehaviour
     public float DoubleJumpForce;
     public GameObject Platform;
 
-    private PlatformController PlatCont;
+    private PlatformTopController PlatTopCont;
     private Rigidbody2D Rigidbody;
     private bool Airborne;
     private bool DoubleJumped;
@@ -19,14 +19,14 @@ public class CharacterBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //PlatCont = Platform.GetComponent<PlatformController>();
+        PlatTopCont = Platform.GetComponent<PlatformTopController>();
         Rigidbody = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Fling();
+        Fling();
         DoubleJump();
         //SpringSwitch();
     }
@@ -34,7 +34,7 @@ public class CharacterBehaviour : MonoBehaviour
     void Fling()
     {
         var isGrounded = GetGroundedOnPlatform();
-        if (PlatCont.StretchHeight - Platform.transform.localScale.y <= Threshold && isGrounded)
+        if (PlatTopCont.StretchHeight - Platform.transform.position.y <= Threshold && isGrounded)
         {
             print("fling!");
             Airborne = true;

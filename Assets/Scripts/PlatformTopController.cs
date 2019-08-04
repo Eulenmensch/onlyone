@@ -12,14 +12,16 @@ public class PlatformTopController : MonoBehaviour
     public GameObject LineTarget;
 
     private float DeformInput;
-    private float DefaultXPos;
+    private float DefaultYPos;
     private LineRenderer Line;
+    private BoxCollider2D BoxCollider;
 
     // Start is called before the first frame update
     void Start()
     {
         Line = GetComponent<LineRenderer>();
-        DefaultXPos = transform.position.x;
+        BoxCollider = GetComponent<BoxCollider2D>();
+        DefaultYPos = transform.position.y;
     }
 
     // Update is called once per frame
@@ -27,6 +29,7 @@ public class PlatformTopController : MonoBehaviour
     {
         GetInput();
         MoveCollider();
+        ResizeCollider();
         StretchAndSquash();
     }
 
@@ -34,6 +37,15 @@ public class PlatformTopController : MonoBehaviour
     {
         Line.SetPosition(0, transform.position);
         Line.SetPosition(1, LineTarget.transform.position);
+    }
+
+    void ResizeCollider()
+    {
+        var midPos = transform.localPosition.y - 1;
+        var offset = new Vector2(BoxCollider.offset.x, -midPos);
+        BoxCollider.offset = offset;
+        var size = new Vector2(BoxCollider.size.x, (transform.localPosition.y * 2) - 1);
+        BoxCollider.size = size;
     }
 
     void MoveCollider()
@@ -51,7 +63,7 @@ public class PlatformTopController : MonoBehaviour
         }
         else
         {
-            transform.DOMoveY(DefaultXPos, SquashTime);
+            transform.DOMoveY(DefaultYPos, SquashTime);
         }
     }
 
